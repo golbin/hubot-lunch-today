@@ -1,0 +1,33 @@
+{
+  "name": "hubot-lunch-today",
+  "version": "0.1.0",
+  "description": "Hubot Lunch Today",
+  "main": "hubot-lunch-today.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {
+    "hubot-scripts": "*"
+  },
+  "devDependencies": {
+    "nodeunit": "*",
+    "grunt": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-nodeunit": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/golbin/hubot-lunch-today.git"
+  },
+  "keywords": [
+    "hubot",
+    "hubot-scripts",
+    "lunch"
+  ],
+  "author": "golbin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/golbin/hubot-lunch-today/issues"
+  },
+  "homepage": "https://github.com/golbin/hubot-lunch-today"
+}
