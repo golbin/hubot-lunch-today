@@ -39,14 +39,13 @@ module.exports = function(robot) {
         return;
       }
     } else if (Date.now() < UPDATED + CACHE_EXPIRES) {
-      msg.send('추천메뉴: ' + CACHED_MENU);
-      msg.send('메뉴 추천은 1분에 한 번만 가능합니다. 1분 후에 다시 시도해주세요.');
+      msg.send('새로운 메뉴 추천은 1분에 한 번만 가능합니다. 1분 후에 다시 시도해주세요.');
       return;
     } else {
       CACHED_MENU = menu.random();
     }
 
     UPDATED = Date.now();
-    msg.send(CACHED_MENU);
+    msg.send('추천메뉴: ' + CACHED_MENU);
   });
 };

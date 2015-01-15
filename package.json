@@ -1,6 +1,6 @@
 {
   "name": "hubot-lunch-today",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Hubot Lunch Today",
   "main": "hubot-lunch-today.js",
   "scripts": {
@@ -29,5 +29,8 @@
   "bugs": {
     "url": "https://github.com/golbin/hubot-lunch-today/issues"
   },
-  "homepage": "https://github.com/golbin/hubot-lunch-today"
+  "homepage": "https://github.com/golbin/hubot-lunch-today",
+  "directories": {
+    "test": "test"
+  }
 }
