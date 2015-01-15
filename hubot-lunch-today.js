@@ -30,22 +30,22 @@ module.exports = function(robot) {
       }
     }
 
+    var message = '';
     if (menuNum !== null) {
       var selected = menu.select(menuNum);
       if (selected) {
-        CACHED_MENU = selected;
+        message = '선택하신 메뉴: ' + selected;
       } else {
-        msg.send('해당하는 번호의 메뉴가 없습니다.');
-        return;
+        message = '해당하는 번호의 메뉴가 없습니다.';
       }
     } else if (Date.now() < UPDATED + CACHE_EXPIRES) {
-      msg.send('새로운 메뉴 추천은 1분에 한 번만 가능합니다. 1분 후에 다시 시도해주세요.');
-      return;
+      message = '새로운 메뉴 추천은 1분에 한 번만 가능합니다. 1분 후에 다시 시도해주세요.\n기추천메뉴: ' + CACHED_MENU;
     } else {
       CACHED_MENU = menu.random();
+      UPDATED = Date.now();
+      message = '추천메뉴: ' + CACHED_MENU;
     }
 
-    UPDATED = Date.now();
-    msg.send('추천메뉴: ' + CACHED_MENU);
+    msg.send(message);
   });
 };
