@@ -1,10 +1,11 @@
-Hubot Google News Reader
+Hubot Lunch Today
 ================
 
-Very simple google news reader for Hubot.
+Very simple Hubot script for suggesting lunch menu.
 
-You can change the rss url of news with **NEWS_FEED_URL** in **hubot-google-news.coffee**
+It's only for Korean at now.
 
 ```
-hubot news
+hubot lunch
+hubot lunch lunchNumber
 ```
