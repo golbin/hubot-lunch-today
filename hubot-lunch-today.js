@@ -34,7 +34,7 @@ var imageMe = function (msg, query, cb) {
 
       if (images && images.length > 0) {
         image = msg.random(images);
-        return cb(ensureImageExtension(image.unescapedUrl));        
+        return cb(image.unescapedUrl);
       }
     });
 };
