@@ -116,13 +116,17 @@ var suggestMenu = function (msg, menuNum) {
 
 module.exports = function(robot) {
   robot.respond(/lunch(\s*([0-9a-z]*))/i, function(msg) {
+    msg.send(msg.match);
     if (msg.match[2] === 'party') {
+      msg.send('party');
       if (isNaN(msg.match[3])) {
+        msg.send('make party');
         suggestParty(msg, null);
       } else {
         suggestParty(msg, msg.match[3]);
       }
     } else if (isNaN(msg.match[2])) {
+      msg.send('suggest menu');
       suggestMenu(msg, null);
     } else {
       suggestMenu(msg, msg.match[2]);
