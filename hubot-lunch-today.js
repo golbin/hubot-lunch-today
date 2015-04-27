@@ -6,7 +6,6 @@
  *   hubot lunch
  *   hubot lunch num|help
  *   hubot lunch party
- *   hubot lunch party num
  *
  * Author:
  *   @golbin
@@ -52,37 +51,52 @@ var ensureImageExtension = function(url) {
   }
 };
 
-var getSlackMembers = function (callback) {
+var getSlackMembers = function (msg, callback) {
   var q = {
-    token: 'process.env.HUBOT_SLACK_TOKEN'
+    token: process.env.HUBOT_SLACK_TOKEN
   };
 
-  var members;
+  var members = [];
 
   msg.http('https://slack.com/api/users.list')
   .query(q)
   .get()(function(err, res, body) {
-    for (var member in JSON.parse(body).members) {
-      members.push(member.name);
-    }
+    JSON.parse(body).members.forEach(function (member) {
+      if (member.is_bot === false && member.deleted === false) {
+        if (member.real_name) {
+          member.real_name = member.real_name.split(' ');
+          member.real_name = member.real_name[1] ? member.real_name[1] + member.real_name[0] : member.real_name[0];
+          members.push(member.real_name);
+        } else {
+          members.push(member.name);
+        }        
+      }
+    });
 
     return callback(members);
   });
 };
 
-var suggestParty = function (msg, partyNum) {
-  getSlackMembers(function (members) {
-    var parties = party.shake(members, partyNum);
+var suggestParty = function (msg, partyNum, callback) {
+  getSlackMembers(msg, function (members) {
+    var parties = party.shake(members, partyNum),
+        memberText = [];
 
-    msg.send("오늘의 점심 파티는 다음과 같습니다. 다들 맛점하세요!");
+    var partyInfo = {
+      message: "오늘의 점심 파티는 다음과 같습니다. 다들 맛점하세요! (12시 30분 이후의 첫번째 제안을 사용!!)"
+    };
 
     for (var i = 0; i < parties.length; i++) {
-      msg.send((i + 1) + "팀" + parties[i]);
+      memberText.push((i + 1) + "팀: " + parties[i]);
     }
+
+    partyInfo.memberText = memberText.join("\n");
+
+    callback(partyInfo);
   });
 };
 
-var suggestMenu = function (msg, menuNum) {
+var suggestMenu = function (msg, menuNum, callback) {
   var isCached = false;
 
   var message = '';
@@ -105,31 +119,45 @@ var suggestMenu = function (msg, menuNum) {
   if (!isCached) {
     imageMe(msg, CACHED_MENU, function(url) {
       CACHED_MENU_IMAGE = url;
-      msg.send(message);
-      msg.send(CACHED_MENU_IMAGE);
-    });      
+      callback({
+        message: message,
+        image: CACHED_MENU_IMAGE
+      });
+    });
   } else {
-    msg.send(message);
-    msg.send(CACHED_MENU_IMAGE);
+    callback({
+      message: message,
+      image: CACHED_MENU_IMAGE
+    });
   }
 };
 
 module.exports = function(robot) {
   robot.respond(/lunch(\s*([0-9a-z]*))/i, function(msg) {
-    msg.send(msg.match);
-    if (msg.match[2] === 'party') {
-      msg.send('party');
-      if (isNaN(msg.match[3])) {
-        msg.send('make party');
-        suggestParty(msg, null);
+    var menuNum = null,
+        action = null;
+
+    if (msg.match[2]) {
+      if (msg.match[2] === 'party') {
+        action = 'party';
+      } else if (isNaN(msg.match[2])) {
+        msg.send('lunch | lunch num');
+        return;
       } else {
-        suggestParty(msg, msg.match[3]);
+        menuNum = msg.match[2];
       }
-    } else if (isNaN(msg.match[2])) {
-      msg.send('suggest menu');
-      suggestMenu(msg, null);
+    }
+
+    if (action === 'party') {
+      suggestParty(msg, null, function (partyInfo) {
+        msg.send(partyInfo.message);
+        msg.send(partyInfo.memberText);
+      });
     } else {
-      suggestMenu(msg, msg.match[2]);
+      suggestMenu(msg, menuNum, function (menuInfo) {
+        msg.send(menuInfo.message);
+        msg.send(menuInfo.image);
+      });      
     }
   });
 };
