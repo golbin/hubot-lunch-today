@@ -8,4 +8,5 @@ It's only for Korean at now.
 ```
 hubot lunch
 hubot lunch lunchNumber
+hubot lunch party
 ```
