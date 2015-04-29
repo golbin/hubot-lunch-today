@@ -10,7 +10,7 @@ var shake = function (members, partyNum) {
   memberNum = Math.ceil(members.length / partyNum);
 
   for (var i = 0; i < partyNum; i++) {
-    parties.push(members.slice(i * memberNum, (i + 1) * memberNum).join(', '));
+    parties.push(members.slice(i * memberNum, (i + 1) * memberNum));
   }
 
   return parties;

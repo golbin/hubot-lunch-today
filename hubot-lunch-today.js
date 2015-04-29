@@ -87,7 +87,8 @@ var suggestParty = function (msg, partyNum, callback) {
     };
 
     for (var i = 0; i < parties.length; i++) {
-      memberText.push((i + 1) + "팀: " + parties[i]);
+      parties[i][0] = "*" + parties[i][0] + "*(밥대장)";
+      memberText.push((i + 1) + "팀: " + parties[i].join(', '));
     }
 
     partyInfo.memberText = memberText.join("\n");
